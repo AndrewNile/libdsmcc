@@ -9,3 +9,4 @@ Latest: https://github.com/ua0lnj/libdsmcc
 
 Made as a separate library.
 
+By default files are saved in /tmp/cache. You can set cache file in dsmcc_status() function, the "tmp" variable. Set it NULL for default.

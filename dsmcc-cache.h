@@ -63,7 +63,7 @@ struct cache {
 	int num_dirs, total_dirs;
 	char *name;
 	FILE *debug_fd;
-
+	char *tmp;
 
 	struct file_info *files;
 };
@@ -84,7 +84,7 @@ struct cache_file * dsmcc_cache_file_find_data(struct cache *, unsigned long,uns
 
 void dsmcc_cache_free_dir(struct cache_dir *);
 
-void dsmcc_cache_init(struct cache *, const char *, FILE *);
+void dsmcc_cache_init(struct cache *, const char *, const char *, FILE *);
 
 void dsmcc_cache_free(struct cache *);
 

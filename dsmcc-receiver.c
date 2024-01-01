@@ -14,7 +14,7 @@
 // #include <mpatrol.h>
 
 void
-dsmcc_init(struct dsmcc_status *status, const char *channel) {
+dsmcc_init(struct dsmcc_status *status, const char *tmp, const char *channel) {
 	int i;
 
 	status->streams = NULL;
@@ -26,7 +26,7 @@ dsmcc_init(struct dsmcc_status *status, const char *channel) {
 		status->carousels[i].filecache = malloc(sizeof(struct cache));
 		status->carousels[i].gate = NULL;
 		status->carousels[i].id = 0;
-		dsmcc_cache_init(status->carousels[i].filecache, channel, status->debug_fd);
+		dsmcc_cache_init(status->carousels[i].filecache, tmp, channel, status->debug_fd);
 	}
 
 	if(channel != NULL) {

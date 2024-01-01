@@ -16,7 +16,7 @@ FILE *cache_fd = NULL;
 /* TODO This should be stored in obj_carousel structure  */
 
 void
-dsmcc_cache_init(struct cache *filecache, const char *channel_name, FILE *debug_fd) {
+dsmcc_cache_init(struct cache *filecache, const char *tmp, const char *channel_name, FILE *debug_fd) {
 
 	/* TODO - load cache from disk into obj_carousel */
 
@@ -31,8 +31,15 @@ dsmcc_cache_init(struct cache *filecache, const char *channel_name, FILE *debug_
 		filecache->name = (char*)malloc(1);
 		filecache->name = '\0';
 	}
-
-	mkdir("/tmp/cache", 0755);	/* By popular demand... */
+	if (tmp) {
+		mkdir(tmp, 0755);
+		filecache->tmp = (char*)malloc(strlen(tmp)+1);
+		strcpy(filecache->tmp, tmp);
+	} else {
+		mkdir("/tmp/cache", 0755);	/* By popular demand... */
+		filecache->tmp = (char*)malloc(11);
+		filecache->tmp = "/tmp/cache";
+	}
 
 	filecache->num_files = filecache->num_dirs = filecache->total_files 
 		= filecache->total_dirs = 0;
@@ -99,6 +106,8 @@ dsmcc_cache_free(struct cache *filecache) {
 
 	if(filecache->name)
 		free(filecache->name);
+	if(filecache->tmp)
+		free(filecache->tmp);
 }
 
 void
@@ -172,7 +181,8 @@ dsmcc_cache_scan_dir(struct cache_dir *dir, unsigned long car_id, unsigned short
 }
 
 struct cache_dir *
-dsmcc_cache_dir_find(struct cache *filecache, unsigned long car_id, unsigned short module_id, unsigned int key_len, char *key) {        struct cache_dir *dir, *fdir;
+dsmcc_cache_dir_find(struct cache *filecache, unsigned long car_id, unsigned short module_id, unsigned int key_len, char *key) {
+	struct cache_dir *dir, *fdir;
 	struct cache_file *file, *nf;
 	
 //      fprintf(cache_fd,"Searching for dir %d/%d/(key)\n", module_id, key_len);
@@ -492,7 +502,7 @@ dsmcc_cache_write_dir(struct cache *filecache, struct cache_dir *dir) {
 		strcat(dir->dirpath, dir->name);
 	}
 
-	sprintf(dirbuf, "%s/%s/%s", "/tmp/cache/", filecache->name, dir->dirpath);
+	sprintf(dirbuf, "%s/%s/%s", filecache->tmp, filecache->name, dir->dirpath);
 
 	if(filecache->debug_fd != NULL) {
 		fprintf(filecache->debug_fd,"[libcache] Writing directory %s to filesystem\n", dir->dirpath);
@@ -591,7 +601,7 @@ dsmcc_cache_write_file(struct cache *filecache, struct cache_file *file) {
 	  if(filecache->debug_fd != NULL) {
 		fprintf(filecache->debug_fd,"[libcache] Writing file %s/%s (%d bytes)\n", file->parent->dirpath, file->filename, file->data_len);
 	  }
-	  sprintf(buf,"/tmp/cache/%s/%s/%s", filecache->name, file->parent->dirpath, file->filename);
+	  sprintf(buf,"%s/%s/%s/%s", filecache->tmp, filecache->name, file->parent->dirpath, file->filename);
 	  data_fd = fopen(buf, "wb");
 	  fwrite(file->data, 1, file->data_len, data_fd);
 	  fclose(data_fd);

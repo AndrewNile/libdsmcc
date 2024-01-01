@@ -7,7 +7,7 @@
 
 /* Init library and return new status struct */
 
-struct dsmcc_status *dsmcc_open(const char *channel, FILE *debug_fd) {
+struct dsmcc_status *dsmcc_open(const char *channel, const char *tmp, FILE *debug_fd) {
 
 	struct dsmcc_status *status = NULL;
 
@@ -25,7 +25,7 @@ struct dsmcc_status *dsmcc_open(const char *channel, FILE *debug_fd) {
 
 	status->debug_fd = debug_fd;
 
-	dsmcc_init(status, channel);
+	dsmcc_init(status, tmp, channel);
 
 	return status;
 }

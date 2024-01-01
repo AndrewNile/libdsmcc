@@ -145,7 +145,7 @@ struct dsmcc_section {
 	
 
 
-void dsmcc_init(struct dsmcc_status *, const char *channel);
+void dsmcc_init(struct dsmcc_status *, const char *tmp, const char *channel);
 void dsmcc_free(struct dsmcc_status *);
 void dsmcc_add_stream(struct dsmcc_status *, struct stream *);
 

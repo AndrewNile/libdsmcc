@@ -52,7 +52,7 @@ struct dsmcc_status {
 	FILE *debug_fd;
 };
 
-struct dsmcc_status *dsmcc_open(const char *channel, FILE *);
+struct dsmcc_status *dsmcc_open(const char *channel, const char *tmp, FILE *);
 void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int Length);
 void dsmcc_close(struct dsmcc_status *status);
 void dsmcc_free(struct dsmcc_status *status);
