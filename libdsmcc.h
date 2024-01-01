@@ -29,7 +29,7 @@ struct dsmcc_status {
 	int rec_dirs,  total_dirs;
 	int gzip_size, total_size;
 	enum cachestate { EMPTY, LISTINGS, FILLING, FULL } state;
-	enum running { NOTRUNNING, RUNNINGSOON, PAUSED, RUNNING };
+	enum running { NOTRUNNING, RUNNINGSOON, PAUSED, RUNNING } run;
 
 	char *channel_name;
 
@@ -53,7 +53,7 @@ struct dsmcc_status {
 };
 
 struct dsmcc_status *dsmcc_open(const char *channel, FILE *);
-void dsmcc_receive(struct dsmcc_status *status, unsigned char *Data, int Length);
+void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int Length);
 void dsmcc_close(struct dsmcc_status *status);
 void dsmcc_free(struct dsmcc_status *status);
 

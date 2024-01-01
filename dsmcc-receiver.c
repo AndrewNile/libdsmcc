@@ -29,12 +29,12 @@ dsmcc_init(struct dsmcc_status *status, const char *channel) {
 		dsmcc_cache_init(status->carousels[i].filecache, channel, status->debug_fd);
 	}
 
-	if(channel != '\0') {
-		status->name = (char*)malloc(strlen(channel)+1);
-		strcpy(status->name, channel);
+	if(channel != NULL) {
+		status->channel_name = (char*)malloc(strlen(channel)+1);
+		strcpy(status->channel_name, channel);
 	} else {
-		status->name = (char*)malloc(7+1);
-		strcpy(status->name, "Unknown");
+		status->channel_name = (char*)malloc(7+1);
+		strcpy(status->channel_name, "Unknown");
 	}
 
 }
@@ -74,8 +74,8 @@ dsmcc_free(struct dsmcc_status *status) {
 
 	status->buffers = NULL;
 
-	if(status->name)
-		free(status->name);
+	if(status->channel_name)
+		free(status->channel_name);
 
 //      if(debug_fd != NULL) fclose(debug_fd);
 //      if(test_fd != NULL) fclose(test_fd);
@@ -725,7 +725,7 @@ dsmcc_add_module_data(struct dsmcc_status *status, struct dsmcc_section *section
            }
 
            if(status->debug_fd != NULL) {
-	  	fprintf(status->debug_fd, "[libdsmcc] Module %d Current Size %d Total Size %d\n", cachep->module_id, cachep->curp, cachep->size);
+	  	fprintf(status->debug_fd, "[libdsmcc] Module %d Current Size %ld Total Size %ld\n", cachep->module_id, cachep->curp, cachep->size);
 	   }
 
 	   if(cachep->curp >= cachep->size) {
@@ -852,7 +852,7 @@ dsmcc_process_section(struct dsmcc_status *status,unsigned char *Data,int Length
 		syslog(LOG_ERR, "Corrupt CRC for section, dropping");
 		if(status->debug_fd != NULL) {
 			FILE *crcfd;
-			fprintf(status->debug_fd, "[libdsmcc] Dropping corrupt section (Got %lX\n", crc32_decode);
+			fprintf(status->debug_fd, "[libdsmcc] Dropping corrupt section (Got %X\n", crc32_decode);
 			fprintf(status->debug_fd, "[libdsmcc] Written packet to crc-error.ts\n");
 			crcfd = fopen("crc-error.ts", "w");
 			fwrite(Data, 1, Length, crcfd);

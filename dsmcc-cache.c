@@ -417,7 +417,7 @@ dsmcc_cache_dir_info(struct cache *filecache, unsigned short module_id, unsigned
 	dir->parent = dsmcc_cache_dir_find(filecache, dir->carousel_id, module_id, objkey_len, objkey);
 
 	if(filecache->debug_fd != NULL) {
-		fprintf(filecache->debug_fd,"[libcache] Caching dir %s (with parent %d/%d/%c%c%c%c\n", dir->name, dir->p_module_id, dir->p_key_len, dir->p_key[0], dir->p_key[1], dir->p_key[2]);
+		fprintf(filecache->debug_fd,"[libcache] Caching dir %s (with parent %d/%d/%c%c%c\n", dir->name, dir->p_module_id, dir->p_key_len, dir->p_key[0], dir->p_key[1], dir->p_key[2]);
 	}
 
 	if(dir->parent == NULL) {

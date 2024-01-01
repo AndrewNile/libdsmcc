@@ -30,28 +30,44 @@
 
 .DELETE_ON_ERROR:
 
+VERMAJOR = 0
+VERMINOR = 3
+
+VER = $(VERMAJOR).$(VERMINOR).0
+
 CC = gcc
-CFLAGS ?= -g -Wmissing-prototypes -Wstrict-prototypes \
+CFLAGS ?= -fPIC -g -Wmissing-prototypes -Wstrict-prototypes \
          -DNAPI -Wimplicit -D__USE_FIXED_PROTOTYPES__ # -ansi -pedantic 
 
-INCDIRS = -I../../../../../DVB 
-DISTDIR = ../lib
+LDFLAGS ?= -shared
+INCDIRS = -I/usr/src/media_build/linux/dvb
+PREFIX ?= /usr/local
+ifneq ($(wildcard $(PREFIX)/lib64),)
+    DESTDIR ?= $(PREFIX)/lib64
+else
+    DESTDIR ?= $(PREFIX)/lib
+endif
+PCDIR  ?= $(DESTDIR)/pkgconfig
 MAKEDEPEND = gcc -M
 
 LIBS = -lsi -llx
 
 AR = ar
-ARFLAGS = ru
+ARFLAGS = r
 RANLIB = ranlib
 
-SILIB = libdsmcc.a
+LIBNAME = libdsmcc
+SILIB = $(LIBNAME).a
+SILIB_SO = $(LIBNAME).so
 OBJS = dsmcc-receiver.o dsmcc-util.o dsmcc-descriptor.o dsmcc-biop.o dsmcc-carousel.o dsmcc-cache.o dsmcc.o
 
-all : $(SILIB)
+HEADERS = libdsmcc.h dsmcc-receiver.h dsmcc-carousel.h dsmcc-biop.h dsmcc-descriptor.h dsmcc-cache.h
+
+all : $(SILIB) $(SILIB_SO).$(VER)
 
 clean :
 	@echo cleaning workspace...
-	@rm -f $(OBJS) $(SILIB) *~
+	@rm -f $(OBJS) $(SILIB) $(SILIB_SO).$(VER) *~
 	@rm -f Makefile.dep
 
 depend : Makefile.dep
@@ -62,19 +78,50 @@ Makefile.dep :
 
 new : clean depend all
 
-dist: all
-	@echo "distributing $(SILIB) to $(DISTDIR)..."
-	@cp $(SILIB) $(DISTDIR)
-	@cp $(INCLUDES) $(DISTINCDIR)
-	@$(RANLIB) $(DISTDIR)/$(SILIB)
+#dist: all
+#	@echo "distributing $(SILIB) to $(DISTDIR)..."
+#	@cp $(SILIB) $(DISTDIR)
+#	@cp $(INCLUDES) $(DISTINCDIR)
+#	@$(RANLIB) $(DISTDIR)/$(SILIB)
 
 $(SILIB) : $(OBJS)
 	@echo updating library...
 	@$(AR) $(ARFLAGS) $(SILIB) $(OBJS)
 	@$(RANLIB) $(SILIB)
 
+$(SILIB_SO).$(VER) : $(OBJS)
+	@$(CC) $(LDFLAGS) $(OBJS) -o $@
+
 .c.o : 
 	@echo compiling $<...
 	@$(CC) $(DEFINES) $(CFLAGS) $(INCDIRS) -c $<
 
+.PHONY: $(LIBNAME).pc
+$(LIBNAME).pc:
+	@echo "libdir=$(DESTDIR)" > $@
+	@echo "includedir=$(PREFIX)/include" >> $@
+	@echo "" >> $@
+	@echo "Name: Libdsmcc" >> $@
+	@echo "Description: Parser for MPEG2 DSM-CC Data/Object Carousel" >> $@
+	@echo "Version: 0.3.0" >> $@
+	@echo "Libs: -L\$${libdir} -ldsmcc" >> $@
+	@echo "Cflags: -I\$${includedir}/libdsmcc" >> $@
+
 -include Makefile.dep
+
+install-lib: all
+	install -d $(DESTDIR)
+	install -m 755 $(SILIB) $(DESTDIR)
+	install -m 755 $(SILIB_SO).$(VER) $(DESTDIR)/
+	( cd $(DESTDIR); ln -sf $(SILIB_SO).$(VER) $(SILIB_SO).$(VERMAJOR); ln -sf $(SILIB_SO).$(VER) $(SILIB_SO) )
+	if [ -z "$(DESTDIR)" ] ; then ldconfig; fi
+
+install-includes:
+	install -d $(PREFIX)/include/$(LIBNAME)
+	install -m 644 $(HEADERS) $(PREFIX)/include/$(LIBNAME)
+
+install-pc: $(LIBNAME).pc
+	install -d $(PCDIR)
+	install -m 644 $(LIBNAME).pc $(PCDIR)/
+
+install: install-lib install-includes install-pc

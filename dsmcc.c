@@ -30,7 +30,7 @@ struct dsmcc_status *dsmcc_open(const char *channel, FILE *debug_fd) {
 	return status;
 }
 
-void dsmcc_receive(struct dsmcc_status *status, unsigned char *Data, int Length) {
+void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int Length) {
 	struct pid_buffer *buf;
 	unsigned int pid = 0;
 	unsigned int cont;
