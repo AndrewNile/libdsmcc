@@ -31,9 +31,10 @@
 .DELETE_ON_ERROR:
 
 VERMAJOR = 0
-VERMINOR = 3
+VERMINOR = 6
+VERPATCH = 1
 
-VER = $(VERMAJOR).$(VERMINOR).0
+VER = $(VERMAJOR).$(VERMINOR).$(VERPATCH)
 
 CC = gcc
 CFLAGS ?= -fPIC -g -Wmissing-prototypes -Wstrict-prototypes \
@@ -103,7 +104,7 @@ $(LIBNAME).pc:
 	@echo "" >> $@
 	@echo "Name: Libdsmcc" >> $@
 	@echo "Description: Parser for MPEG2 DSM-CC Data/Object Carousel" >> $@
-	@echo "Version: 0.3.0" >> $@
+	@echo "Version: $(VER)" >> $@
 	@echo "Libs: -L\$${libdir} -ldsmcc" >> $@
 	@echo "Cflags: -I\$${includedir}/libdsmcc" >> $@
 
