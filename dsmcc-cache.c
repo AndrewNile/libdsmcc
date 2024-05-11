@@ -603,8 +603,14 @@ dsmcc_cache_write_file(struct cache *filecache, struct cache_file *file) {
 	  }
 	  sprintf(buf,"%s/%s/%s/%s", filecache->tmp, filecache->name, file->parent->dirpath, file->filename);
 	  data_fd = fopen(buf, "wb");
-	  fwrite(file->data, 1, file->data_len, data_fd);
-	  fclose(data_fd);
+	  if (data_fd) {
+	      fwrite(file->data, 1, file->data_len, data_fd);
+	      fclose(data_fd);
+	  } else {
+	      if(filecache->debug_fd != NULL) {
+		  fprintf(filecache->debug_fd,"[libcache] Error open file %s/%s\n", file->parent->dirpath, file->filename);
+	      }
+	  }
 	  /* Free data as no longer needed */
 	  free(file->data);
 	  file->data = NULL; file->data_len = 0;
