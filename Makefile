@@ -51,7 +51,7 @@ endif
 PCDIR  ?= $(DESTDIR)/pkgconfig
 MAKEDEPEND = gcc -M
 
-LIBS = -lsi -llx
+LIBS = -lsi -llx -lz
 
 AR = ar
 ARFLAGS = r
@@ -60,9 +60,9 @@ RANLIB = ranlib
 LIBNAME = libdsmcc
 SILIB = $(LIBNAME).a
 SILIB_SO = $(LIBNAME).so
-OBJS = dsmcc-receiver.o dsmcc-util.o dsmcc-descriptor.o dsmcc-biop.o dsmcc-carousel.o dsmcc-cache.o dsmcc.o
+OBJS = dsmcc-win32.o dsmcc-receiver.o dsmcc-util.o dsmcc-descriptor.o dsmcc-biop.o dsmcc-carousel.o dsmcc-cache.o dsmcc.o
 
-HEADERS = libdsmcc.h dsmcc-receiver.h dsmcc-carousel.h dsmcc-biop.h dsmcc-descriptor.h dsmcc-cache.h
+HEADERS = libdsmcc.h dsmcc-win32.h dsmcc-receiver.h dsmcc-carousel.h dsmcc-biop.h dsmcc-descriptor.h dsmcc-cache.h
 
 all : $(SILIB) $(SILIB_SO).$(VER)
 

@@ -5,7 +5,12 @@
 extern "C" {
 #endif
 
+#ifdef _WIN32
+#include "dsmcc-win32.h"
+#else
 #include <syslog.h>
+#endif
+
 #include "dsmcc-receiver.h"
 #include "dsmcc-carousel.h"
 

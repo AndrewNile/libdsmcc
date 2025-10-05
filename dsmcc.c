@@ -133,4 +133,3 @@ void dsmcc_close(struct dsmcc_status *status) {
 	dsmcc_free(status);
 
 }
-	

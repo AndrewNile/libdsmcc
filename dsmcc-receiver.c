@@ -11,7 +11,6 @@
 #include "dsmcc-cache.h"
 #include "dsmcc-util.h"
 #include "libdsmcc.h"
-// #include <mpatrol.h>
 
 void
 dsmcc_init(struct dsmcc_status *status, const char *tmp, const char *channel) {

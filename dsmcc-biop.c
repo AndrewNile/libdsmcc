@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _WIN32
+#include "dsmcc-win32.h"
+#else
 #include <syslog.h>
+#endif
 
 #include "dsmcc-biop.h"
 #include "dsmcc-descriptor.h"

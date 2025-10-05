@@ -1,7 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef _WIN32
+#include "dsmcc-win32.h"
+#else
 #include <syslog.h>
+#endif
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <fcntl.h>
@@ -10,7 +14,6 @@
 #include "dsmcc-biop.h"
 #include "dsmcc-receiver.h"
 #include "dsmcc-descriptor.h"
-// #include <mpatrol.h>
 
 FILE *cache_fd = NULL;
 /* TODO This should be stored in obj_carousel structure  */
@@ -19,6 +22,8 @@ void
 dsmcc_cache_init(struct cache *filecache, const char *tmp, const char *channel_name, FILE *debug_fd) {
 
 	/* TODO - load cache from disk into obj_carousel */
+
+	char *tmpDir;
 
 	filecache->gateway = filecache->dir_cache = NULL;
 	filecache->file_cache = NULL; filecache->data_cache = NULL;
@@ -31,15 +36,29 @@ dsmcc_cache_init(struct cache *filecache, const char *tmp, const char *channel_n
 		filecache->name = (char*)malloc(1);
 		filecache->name = '\0';
 	}
-	if (tmp) {
-		mkdir(tmp, 0755);
-		filecache->tmp = (char*)malloc(strlen(tmp)+1);
-		strcpy(filecache->tmp, tmp);
-	} else {
-		mkdir("/tmp/cache", 0755);	/* By popular demand... */
-		filecache->tmp = (char*)malloc(11);
-		filecache->tmp = "/tmp/cache";
+
+	if (tmp)
+	{
+		tmpDir = (char*)malloc(strlen(tmp) + 1);
+		strcpy(filecache->tmp, tmpDir);
 	}
+	else
+	{
+#ifdef _WIN32
+		tmpDir = getTempDir();
+		filecache->tmp = (char*)malloc(strlen(tmpDir) + 1);
+#else
+		tmpDir = (char*)malloc(strlen("/tmp/cache") + 1);
+#endif
+
+		strcpy(filecache->tmp, tmpDir);
+	}
+
+#ifdef _WIN32
+	mkdir(tmpDir);
+#else
+	mkdir(tmpDir, 0755);
+#endif
 
 	filecache->num_files = filecache->num_dirs = filecache->total_files 
 		= filecache->total_dirs = 0;
@@ -508,7 +527,11 @@ dsmcc_cache_write_dir(struct cache *filecache, struct cache_dir *dir) {
 		fprintf(filecache->debug_fd,"[libcache] Writing directory %s to filesystem\n", dir->dirpath);
 	  }
 
-	mkdir(dirbuf, 0755); 
+#ifdef _WIN32
+	mkdir(dirbuf);
+#else
+	mkdir(dirbuf, 0755);
+#endif
 
 	/* Write out files that had arrived before directory */
 

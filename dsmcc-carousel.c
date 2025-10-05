@@ -5,7 +5,6 @@
 #include "dsmcc-carousel.h"
 #include "libdsmcc.h"
 
-
 void dsmcc_objcar_free(struct obj_carousel *obj) {
 	struct stream *str, *strnext;
 	struct cache_module_data *cachep, *cachepnext;
