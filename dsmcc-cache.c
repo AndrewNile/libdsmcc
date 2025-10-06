@@ -39,25 +39,25 @@ dsmcc_cache_init(struct cache *filecache, const char *tmp, const char *channel_n
 
 	if (tmp)
 	{
-		tmpDir = (char*)malloc(strlen(tmp) + 1);
-		strcpy(filecache->tmp, tmpDir);
+		filecache->tmp = (char*)malloc(strlen(tmp) + 1);
+		strcpy(filecache->tmp, tmp);
 	}
 	else
 	{
 #ifdef _WIN32
 		tmpDir = getTempDir();
 		filecache->tmp = (char*)malloc(strlen(tmpDir) + 1);
-#else
-		tmpDir = (char*)malloc(strlen("/tmp/cache") + 1);
-#endif
-
 		strcpy(filecache->tmp, tmpDir);
+#else
+		filecache->tmp = (char*)malloc(strlen("/tmp/cache") + 1);
+		strcpy(filecache->tmp, "/tmp/cache");
+#endif
 	}
 
 #ifdef _WIN32
-	mkdir(tmpDir);
+	mkdir(filecache->tmp);
 #else
-	mkdir(tmpDir, 0755);
+	mkdir(filecache->tmp, 0755);
 #endif
 
 	filecache->num_files = filecache->num_dirs = filecache->total_files 
