@@ -522,7 +522,7 @@ dsmcc_add_module_info(struct dsmcc_status *status, struct dsmcc_section *section
 		if((cachep->size % dii->block_size) != 0)
 			num_blocks++;
 		cachep->bstatus=(char*)malloc(((num_blocks/8)+1)*sizeof(char));
-		bzero(cachep->bstatus, (num_blocks/8)+1);
+		memset(cachep->bstatus, 0, ((num_blocks/8)+1)*sizeof(char));
 /*		syslog(LOG_ERR, "Allocated %d bytes to store status for module %d",
 				(num_blocks/8)+1, cachep->module_id);
  */               cachep->data = NULL;
