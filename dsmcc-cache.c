@@ -29,7 +29,7 @@ dsmcc_format_key(unsigned int key_len) {
 
 	result = malloc((key_len * 3) + 1);
 	if (result == NULL) {
-			return NULL;
+		return NULL;
 	}
 	
 	for (x = 0; x < key_len; x++) {
@@ -253,17 +253,17 @@ dsmcc_cache_dir_find(struct cache *filecache, unsigned long car_id, unsigned sho
 				filecache->gateway->files = NULL;
 
 				/* Attach any subdirs or files that arrived prev. */
-			for(file=filecache->file_cache; file!=NULL; file=nf) {
-				nf=file->next;
-				if((file->carousel_id == filecache->gateway->carousel_id) &&
+			for (file = filecache->file_cache; file != NULL; file = nf) {
+				nf = file->next;
+				if ((file->carousel_id == filecache->gateway->carousel_id) &&
 					(file->p_module_id == filecache->gateway->module_id) &&
 					dsmcc_cache_key_cmp(file->p_key, filecache->gateway->key,
-					file->p_key_len,filecache->gateway->key_len)) {
+					file->p_key_len, filecache->gateway->key_len)) {
 						dsmcc_cache_attach_file(filecache, filecache->gateway, file);
 				}
 			}
 
-			for(fdir=filecache->dir_cache;fdir!=NULL;fdir=fdir->next) 
+			for(fdir = filecache->dir_cache; fdir != NULL; fdir = fdir->next) 
 				dsmcc_cache_attach_dir(filecache, filecache->gateway, fdir);
 
 			dsmcc_cache_write_dir(filecache, filecache->gateway);	/* Write files to filesystem */
@@ -293,15 +293,15 @@ dsmcc_cache_attach_file(struct cache *filecache, struct cache_dir *root, struct 
 
 	/* Search for any files that arrived previously in unknown files list*/
 	if (root->files == NULL) {
-		if (file->prev!=NULL) {
+		if (file->prev != NULL) {
 			file->prev->next = file->next;
 			if (filecache->debug_fd != NULL) {
 				fprintf(filecache->debug_fd,"[libcache] Set filecache prev to next file\n");
 			}
 		} else {
-			filecache->file_cache=file->next;
+			filecache->file_cache = file->next;
 			if(filecache->debug_fd != NULL) {
-					fprintf(filecache->debug_fd,"[libcache] Set filecache to next file\n");
+				fprintf(filecache->debug_fd,"[libcache] Set filecache to next file\n");
 			}
 		}
 
@@ -319,7 +319,7 @@ dsmcc_cache_attach_file(struct cache *filecache, struct cache_dir *root, struct 
 				fprintf(filecache->debug_fd,"[libcache] Set filecache (not start) prev to next file\n");
 			}
 		} else {
-			filecache->file_cache=file->next;
+			filecache->file_cache = file->next;
 			if (filecache->debug_fd != NULL) {
 				fprintf(filecache->debug_fd,"[libcache] Set filecache (not start) to next file\n");
 			}
@@ -370,10 +370,10 @@ dsmcc_cache_attach_dir(struct cache *filecache, struct cache_dir *root, struct c
 				filecache->dir_cache = dir->next;
 			}
 
-			if(dir->next != NULL)
+			if (dir->next != NULL)
 				dir->next->prev = dir->prev;
 
-			for (last=root->sub; last->next != NULL; last=last->next) { ; }
+			for (last = root->sub; last->next != NULL; last = last->next) { ; }
 
 			last->next = dir;
 			dir->prev = last;
@@ -388,7 +388,7 @@ dsmcc_cache_scan_file(struct cache_dir *dir, unsigned long car_id, unsigned int 
 	struct cache_file *file;
 	struct cache_dir *subdir;
 
-	if(dir == NULL) { return NULL; }
+	if (dir == NULL) { return NULL; }
 
 /*	fprintf(cache_fd, "Searching for file %d - \n", mod_id);
 		for (int i = 0; i < key_len; i++) {
@@ -575,8 +575,8 @@ dsmcc_cache_write_dir(struct cache *filecache, struct cache_dir *dir) {
 	for (file = dir->files; file != NULL; file = file->next) {
 		if (file->data != NULL) {
 			if (filecache->debug_fd != NULL) {
-					fprintf(filecache->debug_fd, "[libcache] Writing out file %s under new dir %s\n", file->filename, dir->dirpath);
-				}
+				fprintf(filecache->debug_fd, "[libcache] Writing out file %s under new dir %s\n", file->filename, dir->dirpath);
+			}
 			dsmcc_cache_write_file(filecache, file);
 		}
 	}
@@ -641,7 +641,7 @@ dsmcc_cache_file(struct cache *filecache, struct biop_message *bm, struct cache_
 			dsmcc_cache_write_file(filecache, file);
 		} else {
 			if (filecache->debug_fd != NULL) {
-					fprintf(filecache->debug_fd, "[libcache] Data for file %s had already arrived\n", file->filename);
+				fprintf(filecache->debug_fd, "[libcache] Data for file %s had already arrived\n", file->filename);
 			}
 		}
 	}
@@ -736,10 +736,10 @@ struct cache_file *
 dsmcc_cache_file_find_data(struct cache *filecache, unsigned long car_id, unsigned short mod_id, unsigned int key_len, char *key) {
 	struct cache_file *last;
 
-	for(last=filecache->data_cache; last!=NULL; last = last->next) {
+	for (last = filecache->data_cache; last != NULL; last = last->next) {
 		
-		if ((last->carousel_id==car_id) && 
-				(last->module_id==mod_id) &&
+		if ((last->carousel_id == car_id) && 
+				(last->module_id == mod_id) &&
 				dsmcc_cache_key_cmp(key, last->key, key_len, last->key_len)) {
 
 			if (last->prev != NULL) {
