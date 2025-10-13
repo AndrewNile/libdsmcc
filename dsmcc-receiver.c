@@ -851,7 +851,7 @@ dsmcc_process_section(struct dsmcc_status *status,unsigned char *Data,int Length
 		syslog(LOG_ERR, "Corrupt CRC for section, dropping");
 		if(status->debug_fd != NULL) {
 			FILE *crcfd;
-			fprintf(status->debug_fd, "[libdsmcc] Dropping corrupt section (Got %X\n", crc32_decode);
+			fprintf(status->debug_fd, "[libdsmcc] Dropping corrupt section (Got %X)\n", crc32_decode);
 			fprintf(status->debug_fd, "[libdsmcc] Written packet to crc-error.ts\n");
 			crcfd = fopen("crc-error.ts", "w");
 			fwrite(Data, 1, Length, crcfd);
