@@ -462,7 +462,7 @@ dsmcc_cache_dir_info(struct cache *filecache, unsigned short module_id, unsigned
 	dir->module_id = bind->ior.body.full.obj_loc.module_id;
 	dir->key_len = bind->ior.body.full.obj_loc.objkey_len;
 	dir->key = (char *)malloc((dir->key_len < 4) ? 4 : dir->key_len);
-	memset(dir->key, 0, sizeof(dir->key));
+	memset(dir->key, 0, (dir->key_len < 4) ? 4 : dir->key_len);
 	memcpy(dir->key, bind->ior.body.full.obj_loc.objkey, dir->key_len);
 
 //	dir->p_carousel_id = carousel_id; Must be the same ?
@@ -470,7 +470,7 @@ dsmcc_cache_dir_info(struct cache *filecache, unsigned short module_id, unsigned
 	dir->p_module_id = module_id;
 	dir->p_key_len = objkey_len;
 	dir->p_key = (char *)malloc((dir->p_key_len < 4) ? 4 : dir->p_key_len);
-	memset(dir->p_key, 0, sizeof(dir->p_key));
+	memset(dir->p_key, 0, (dir->p_key_len < 4) ? 4 : dir->p_key_len);
 	memcpy(dir->p_key, objkey, objkey_len);
 
 	dir->parent = dsmcc_cache_dir_find(filecache, dir->carousel_id, module_id, objkey_len, objkey);
@@ -611,7 +611,7 @@ dsmcc_cache_file(struct cache *filecache, struct biop_message *bm, struct cache_
 		file->module_id = cachep->module_id;
 		file->key_len = bm->hdr.objkey_len;
 		file->key = (char *)malloc((file->key_len < 4) ? 4 : file->key_len);
-		memset(file->key, 0, sizeof(file->key));
+		memset(file->key, 0, (file->key_len < 4) ? 4 : file->key_len);
 		memcpy(file->key, bm->hdr.objkey, file->key_len);
 		file->next = file->prev = NULL;
 		
@@ -794,7 +794,7 @@ dsmcc_cache_file_info(struct cache *filecache, unsigned short mod_id, unsigned i
 		newfile->module_id = bind->ior.body.full.obj_loc.module_id;
 		newfile->key_len = bind->ior.body.full.obj_loc.objkey_len;
 		newfile->key = (char *)malloc((newfile->key_len < 4) ? 4 : newfile->key_len);
-		memset(newfile->key, 0, sizeof(newfile->key));
+		memset(newfile->key, 0, (newfile->key_len < 4) ? 4 : newfile->key_len);
 		memcpy(newfile->key, bind->ior.body.full.obj_loc.objkey, newfile->key_len);
 		newfile->data = NULL;
 	} else {
@@ -817,7 +817,7 @@ dsmcc_cache_file_info(struct cache *filecache, unsigned short mod_id, unsigned i
 		newfile->p_module_id = mod_id;
 		newfile->p_key_len = key_len;
 		newfile->p_key = (char *)malloc((newfile->p_key_len < 4) ? 4 : newfile->p_key_len);
-		memset(newfile->p_key, 0, sizeof(newfile->p_key));
+		memset(newfile->p_key, 0, (newfile->p_key_len < 4) ? 4 : newfile->p_key_len);
 		memcpy(newfile->p_key, key, key_len);
 		newfile->parent = NULL;
 		if (filecache->debug_fd != NULL) {
@@ -835,7 +835,7 @@ dsmcc_cache_file_info(struct cache *filecache, unsigned short mod_id, unsigned i
 
 		newfile->p_key_len = dir->key_len;
 		newfile->p_key = (char *)malloc((dir->key_len < 4) ? 4 : dir->key_len);
-		memset(newfile->p_key, 0, sizeof(newfile->p_key));
+		memset(newfile->p_key, 0, (dir->key_len < 4) ? 4 : dir->key_len);
 		memcpy(newfile->p_key, dir->key, dir->key_len);
 		newfile->parent = dir;
 		if (dir->files == NULL) {

@@ -62,7 +62,7 @@ dsmcc_biop_process_msg_hdr(struct biop_message *bm, struct cache_module_data *ca
 	hdr->objkey_len = Data[off++];
 //	fprintf(bd_fd, "Hdr -> ObjKey Len = %d\n", hdr->objkey_len);
 	hdr->objkey = (char *)malloc((hdr->objkey_len < 4) ? 4 : hdr->objkey_len);
-	memset(hdr->objkey, 0, sizeof(hdr->objkey));
+	memset(hdr->objkey, 0, (hdr->objkey_len < 4) ? 4 : hdr->objkey_len);
 	memcpy(hdr->objkey, Data+off, hdr->objkey_len);
 
 //	fprintf(bd_fd, "Hdr -> ObjKey = %c%c%c%c\n", hdr->objkey[0], hdr->objkey[1], hdr->objkey[2], hdr->objkey[3]);
@@ -529,7 +529,7 @@ dsmcc_biop_process_object(struct biop_obj_location *loc, unsigned char *Data) {
 //	fprintf(biop_fd, "Object -> Key Length = %d\n",loc->objkey_len );
 
 	loc->objkey = (char *)malloc((loc->objkey_len < 4) ? 4 : loc->objkey_len);
-	memset(loc->objkey, 0, sizeof(loc->objkey));
+	memset(loc->objkey, 0, (loc->objkey_len < 4) ? 4 : loc->objkey_len);
 	memcpy(loc->objkey, Data+off, loc->objkey_len);
 
 	off+=loc->objkey_len;
