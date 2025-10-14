@@ -264,8 +264,8 @@ void dsmcc_biop_process_dir(struct biop_message *bm, struct cache_module_data *c
 				dsmcc_cache_dir_info(filecache, cachep->module_id, bm->hdr.objkey_len,
 					bm->hdr.objkey, &bm->body.dir.binding);
 	  } else if (!strcmp("fil", bm->body.dir.binding.name.comps[0].kind)){
-			smcc_cache_file_info(filecache, cachep->module_id, bm->hdr.objkey_len,
-				bm->hdr.objkey, &bm->body.dir.binding);
+				dsmcc_cache_file_info(filecache, cachep->module_id, bm->hdr.objkey_len,
+					bm->hdr.objkey, &bm->body.dir.binding);
 	  }
 	  dsmcc_biop_free_binding(&bm->body.dir.binding);
 	}
@@ -289,7 +289,7 @@ dsmcc_biop_process_file(struct biop_message *bm,struct cache_module_data *cachep
 
 	off += 4;
 
-//	fprintf(bd_fd, "File -> MsgBody Len = %ld\n",bm->body.file.msgbody_len);
+//	fprintf(bd_fd, "File -> MsgBody Len = %ld\n", bm->body.file.msgbody_len);
 
 	bm->body.file.content_len = (Data[off] << 24) | (Data[off + 1] << 16) |
 															(Data[off + 2] << 8)  | Data[off + 3];
@@ -299,7 +299,6 @@ dsmcc_biop_process_file(struct biop_message *bm,struct cache_module_data *cachep
 //	fprintf(bd_fd, "File -> Content Len = %ld\n", bm->body.file.content_len);
 
 	cachep->curp += off;
-
 
 	dsmcc_cache_file(filecache, bm, cachep);
 
