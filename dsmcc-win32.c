@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
 #include <windows.h>
 #include <userenv.h>
+#else
+#define MAX_PATH 256
+#endif
 
 #include "dsmcc-win32.h"
 
@@ -16,8 +20,7 @@ void consolelog(int errLevel, const char *msg)
 			printf("ERR: ");
 	}
 
-	printf(msg);
-	printf("\n");
+	printf("%s\n", msg);
 }
 
 char* getTempDir(void)
@@ -25,7 +28,11 @@ char* getTempDir(void)
 	/* Get the Windows TEMP folder */
 	
 	char* tmpPath;
-	char* tmpFolder = getenv("TEMP");
+	char* tmpFolder;
+	
+#ifdef _WIN32
+	tmpFolder = getenv("TEMP");
+#endif
 
 	if(tmpFolder == NULL)
 	{
