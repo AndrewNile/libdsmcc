@@ -5,5 +5,7 @@
 
 uint32_t dsmcc_crc32 (unsigned char *data, int len);
 
+char* dsmcc_format_key(unsigned int key_len);
+
 #endif
 

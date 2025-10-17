@@ -51,8 +51,8 @@ static unsigned long crc_table[256] = {
 	0x933eb0bb, 0x97ffad0c, 0xafb010b1, 0xab710d06, 0xa6322bdf, 0xa2f33668,
 	0xbcb4666d, 0xb8757bda, 0xb5365d03, 0xb1f740b4};
 
-uint32_t dsmcc_crc32 (unsigned char *data, int len)
-{
+uint32_t
+dsmcc_crc32 (unsigned char *data, int len) {
 	register int i;
 	uint32_t crc = 0xffffffff;
 
@@ -60,4 +60,27 @@ uint32_t dsmcc_crc32 (unsigned char *data, int len)
 		crc = (crc << 8) ^ crc_table[((crc >> 24) ^ *data++) & 0xff];
 
 	return crc;
+}
+
+char*
+dsmcc_format_key(unsigned int key_len) {
+	unsigned int x;
+	char *result;
+
+	if (key_len <= 0) {
+		return NULL;
+	}
+
+	result = malloc((key_len * 3) + 1);
+	if (result == NULL) {
+		return NULL;
+	}
+	
+	for (x = 0; x < key_len; x++) {
+		strcat(result, "%d-");
+	}
+
+	/* Remove final '-' */
+	result[key_len * 3] = '\0';
+	return result;
 }

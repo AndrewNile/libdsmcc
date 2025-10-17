@@ -68,8 +68,6 @@ struct cache {
 	struct file_info *files;
 };
 
-char* dsmcc_format_key(unsigned int key_len);
-
 unsigned int dsmcc_cache_key_cmp(char *, char *, unsigned int, unsigned int);
 
 struct cache_dir * dsmcc_cache_scan_dir(struct cache_dir *, unsigned long carousel_id, unsigned short module_id, unsigned int key_len, char *key);

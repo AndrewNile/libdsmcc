@@ -18,30 +18,6 @@
 FILE *cache_fd = NULL;
 /* TODO This should be stored in obj_carousel structure	*/
 
-char*
-dsmcc_format_key(unsigned int key_len) {
-	unsigned int x;
-	char *result;
-
-	if (key_len <= 0) {
-		return NULL;
-	}
-
-	result = malloc((key_len * 3) + 1);
-	if (result == NULL) {
-		return NULL;
-	}
-	
-	for (x = 0; x < key_len; x++) {
-		strcat(result, "%d-");
-	}
-
-	/* Remove final '-' */
-	result[key_len * 3] = '\0';
-	return result;
-}
-
-
 void
 dsmcc_cache_init(struct cache *filecache, const char *tmp, const char *channel_name, FILE *debug_fd) {
 
@@ -548,7 +524,7 @@ dsmcc_cache_write_dir(struct cache *filecache, struct cache_dir *dir) {
 	struct cache_file *file;
 	char dirbuf[256];
 
-	if (dir->dirpath == NULL)	{
+	if (dir->dirpath == NULL) {
 		dir->dirpath = (char*)
 		malloc(strlen(dir->parent->dirpath) + strlen(dir->name) + 2);
 
