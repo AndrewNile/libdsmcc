@@ -1,5 +1,24 @@
+Sat Oct  5 20:30:42 BST 2025
 
+	- Fixed bug where directories containing multiple subdirectories
+	  would not write more than one dir due to a problem with linked
+	  lists. (Fixed by Andrew Nile)
+	
+	- Fixed bug where data sections received before the root gateway
+	  object was received would not be added to their file's metadata.
+	  This was due to a problem with recursing through the directory
+	  structure at the time the data arrives. (Fixed by Andrew Nile)
 
+	- Add MinGW compatibility.
+
+	- Minor memory fixes.
+
+Mon Jan  1 10:34:01 GMT 2024
+
+	- Adapted to vdr-2.6.4 by Andrey Pridvorov.
+	
+	- Added option to specify cache directory.
+	
 Wed Oct  8 15:10:49 BST 2014
 
 	- Patch for 64 bit systems from Krzysztof Burghardt 
@@ -17,7 +36,6 @@ Tue Oct 28 12:55:48 GMT 2003
 	- Added back some code to do file counting to tell when received
 	  full carousel. Still not working fully, need to find a correct
 	  way to do this ( check spec ? ).
-
 
 Sun Sep  7 14:56:05 BST 2003
 

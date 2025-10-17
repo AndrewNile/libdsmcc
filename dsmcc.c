@@ -130,8 +130,7 @@ void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int L
 }
 
 
-void dsmcc_close(struct dsmcc_status *status)
-{
+void dsmcc_close(struct dsmcc_status *status) {
 	/* Handle streams */
 
 	dsmcc_free(status);
