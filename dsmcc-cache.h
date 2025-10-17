@@ -45,12 +45,12 @@ struct cache_file {
 };
 
 struct file_info {
-        char *filename;
-        char *path;
-        unsigned int size;
-        char arrived;
-        char written;
-        struct file_info *next;
+	char *filename;
+	char *path;
+	unsigned int size;
+	char arrived;
+	char written;
+	struct file_info *next;
 };
 
 
@@ -95,5 +95,6 @@ void dsmcc_cache_write_file(struct cache *, struct cache_file *);
 
 void dsmcc_cache_attach_dir(struct cache *, struct cache_dir *, struct cache_dir *);
 void dsmcc_cache_attach_file(struct cache *, struct cache_dir *, struct cache_file *);
+void dsmcc_cache_attach_data(struct cache *filecache, struct cache_file *f);
 
 #endif

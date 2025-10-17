@@ -367,19 +367,40 @@ dsmcc_cache_attach_dir(struct cache *filecache, struct cache_dir *root, struct c
 	}
 }
 
+void
+dsmcc_cache_attach_data(struct cache *filecache, struct cache_file *f) {
+	struct cache_file *data;
+	
+	data = dsmcc_cache_file_find_data(filecache, f->carousel_id, f->module_id, f->key_len, f->key);
+
+	if ((f != NULL) && (f->data == NULL) && (data != NULL) && (data->data != NULL)) {
+		if (filecache->debug_fd != NULL) {
+			fprintf(filecache->debug_fd, "[libcache] Connecting previously found data for file %s\n", f->filename);
+		}
+		
+		f->data = (char*)malloc(data->data_len);
+		memcpy(f->data, data->data, data->data_len);
+		f->data_len = data->data_len;
+		
+		/* Free the old data object since it was disconnected from the list */
+		if (data->key_len > 0) { 
+			free(data->key);
+			data->key = NULL;
+			data->key_len = 0;
+		}
+		
+		free(data->data);
+		data->data = NULL;
+		free(data);
+	}
+}
+
 struct cache_file *
 dsmcc_cache_scan_file(struct cache_dir *dir, unsigned long car_id, unsigned int mod_id, unsigned int key_len, char *key) {
 	struct cache_file *file;
 	struct cache_dir *subdir;
 
 	if (dir == NULL) { return NULL; }
-
-/*	fprintf(cache_fd, "Searching for file %d/%d/%d/", car_id, mod_id, key_len);
-		for (int i = 0; i < key_len; i++) {
-			fprintf(cache_fd, "%d-", key[i]);
-		}
-		fprintf(cache_fd, "\n");
-*/
 
 	/* Search files in this dir */
 
@@ -548,6 +569,11 @@ dsmcc_cache_write_dir(struct cache *filecache, struct cache_dir *dir) {
 	/* Write out files that had arrived before directory */
 
 	for (file = dir->files; file != NULL; file = file->next) {
+		if (file->data == NULL) {
+			/* Reunite any file data that arrived before the root (when files were inaccessible) */
+			dsmcc_cache_attach_data(filecache, file);
+		}
+		
 		if (file->data != NULL) {
 			if (filecache->debug_fd != NULL) {
 				fprintf(filecache->debug_fd, "[libcache] Writing out file %s under new dir %s\n", file->filename, dir->dirpath);
