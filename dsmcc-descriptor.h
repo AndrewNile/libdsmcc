@@ -41,8 +41,8 @@ struct descriptor_grouplink {
 struct descriptor_private {
 	char *descriptor;
 };
-	
-struct descriptor_compressed { 
+
+struct descriptor_compressed {
 	char method;
 	unsigned long original_size;
 };
@@ -50,7 +50,7 @@ struct descriptor_compressed {
 struct descriptor {
 	unsigned char tag;
 	unsigned char len;
-	union {
+	union 	{
 		struct descriptor_type type;
 		struct descriptor_name name;
 		struct descriptor_info info;
@@ -60,8 +60,8 @@ struct descriptor {
 		struct descriptor_dltime dltime;
 		struct descriptor_grouplink grouplink;
 		struct descriptor_compressed compressed;
-/*		struct descriptor_private private;
-		struct descriptor_subgroup subgroup  #ref. DVB SSU */
+		/*	struct descriptor_private private;
+				struct descriptor_subgroup subgroup  #ref. DVB SSU */
 	} data;
 
 	struct descriptor *next;
@@ -83,6 +83,6 @@ struct descriptor *
 dsmcc_desc_process_one(unsigned char *Data, int *offset);
 
 struct descriptor *
-	dsmcc_desc_process(unsigned char *Data, int data_len, int *offset);
- 
+dsmcc_desc_process(unsigned char *Data, int data_len, int *offset);
+
 #endif

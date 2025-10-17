@@ -6,8 +6,6 @@
 #define LOG_ERR 4
 #endif
 
-
-
 void consolelog(int errLevel, const char *msg);
 char* getTempDir(void);
 

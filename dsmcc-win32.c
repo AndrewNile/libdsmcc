@@ -12,10 +12,8 @@
 
 /* Compatibility functions for Windows */
 
-void consolelog(int errLevel, const char *msg)
-{
-	switch (errLevel)
-	{
+void consolelog(int errLevel, const char *msg) {
+	switch (errLevel) {
 		case LOG_ERR:
 			printf("ERR: ");
 	}
@@ -23,19 +21,18 @@ void consolelog(int errLevel, const char *msg)
 	printf("%s\n", msg);
 }
 
-char* getTempDir(void)
-{
+
+char* getTempDir(void) {
 	/* Get the Windows TEMP folder */
-	
+
 	char* tmpPath;
 	char* tmpFolder;
-	
+
 #ifdef _WIN32
 	tmpFolder = getenv("TEMP");
 #endif
 
-	if(tmpFolder == NULL)
-	{
+	if (tmpFolder == NULL) {
 		/* Better than nothing */
 		tmpFolder = (char*)malloc(strlen("temp") + 1);
 		strcpy(tmpFolder, "temp");
@@ -44,7 +41,7 @@ char* getTempDir(void)
 	/* Ensure it doesn't exceed limits */
 	tmpPath = (char*)malloc(strlen(tmpFolder) + 1);
 	snprintf(tmpPath, MAX_PATH - 1, "%s", tmpFolder);
-	
+
 	free(tmpFolder);
 	return tmpPath;
 }

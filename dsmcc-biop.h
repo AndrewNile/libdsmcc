@@ -4,7 +4,7 @@
 #include "dsmcc-cache.h"
 #include "dsmcc-descriptor.h"
 
-#define	BIOP_OBJ_OFFSET	11
+#define BIOP_OBJ_OFFSET 11
 #define BIOP_TAG_OFFSET 17
 
 struct biop_name_comp {
@@ -22,11 +22,11 @@ struct biop_name {
 struct biop_body_file {
 	unsigned long msgbody_len;
 	unsigned long content_len;
-/*	char *content_byte; */
+	/*	char *content_byte; */
 };
 
 /*
-struct biop_body_stream { 
+struct biop_body_stream {
 	struct str_info_t info_t;
 	unsigned char contextlist_count};
 	struct context *contexts;
@@ -35,7 +35,7 @@ struct biop_body_stream {
 	struct biop_tap *taps;
 };
 
-struct biop_body_stream_event { 
+struct biop_body_stream_event {
 	struct str_info_t info_t;
 	struct str_eventlist_t *eventlist_t;
 	unsigned char contextlist_count;
@@ -98,7 +98,6 @@ struct biop_module_info {
 	struct descriptor *descriptors;
 };
 
-
 struct biop_dsm_connbinder {
 	unsigned long component_tag;
 	unsigned char component_data_len;
@@ -131,7 +130,7 @@ struct biop_profile_lite {
 };
 
 struct biop_ior {
-	unsigned long type_id_len; 
+	unsigned long type_id_len;
 	char *type_id;
 	unsigned long tagged_profiles_count;
 	unsigned long profile_id_tag;
@@ -141,7 +140,7 @@ struct biop_ior {
 	} body;
 	/* UKProfile - ignore other profiles */
 };
-	
+
 struct biop_binding {
 	struct biop_name name;
 	char binding_type;
@@ -169,37 +168,37 @@ struct biop_message {
 		struct biop_body_file file;
 		struct biop_body_directory dir;
 		struct biop_body_gateway srg;
-/*		struct biop_body_stream str;
-		struct biop_body_streamevent eve;
-*/	} body;
+		/*	struct biop_body_stream str;
+				struct biop_body_streamevent eve;
+		*/
+	} body;																					
 };
 
 struct dsmcc_module_info {
-        unsigned short module_id;
-        unsigned long  module_size;
-        unsigned char module_version;
-        unsigned char module_info_len;
-        struct biop_module_info modinfo;
-        unsigned char *data;
-        unsigned int curp;
-        struct dsmcc_module_info *next;
+	unsigned short module_id;
+	unsigned long  module_size;
+	unsigned char module_version;
+	unsigned char module_info_len;
+	struct biop_module_info modinfo;
+	unsigned char *data;
+	unsigned int curp;
+	struct dsmcc_module_info *next;
 };
 
 struct dsmcc_dsi {
-        unsigned short data_len;
-        unsigned short num_groups;
-        /*struct dsmcc_group *groups */
-        struct biop_ior profile;
-        unsigned short user_data_len;
-        unsigned char *user_data;
+	unsigned short data_len;
+	unsigned short num_groups;
+	/* struct dsmcc_group *groups */
+	struct biop_ior profile;
+	unsigned short user_data_len;
+	unsigned char *user_data;
 };
-
 
 int dsmcc_biop_process_ior(struct biop_ior *, unsigned char *);
 int dsmcc_biop_process_name(struct biop_name *,unsigned char *);
 int dsmcc_biop_process_name_comp(struct biop_name_comp*,unsigned char *);
 int dsmcc_biop_process_binding(struct biop_binding*,unsigned char *Data);
-int dsmcc_biop_process_module_info(struct biop_module_info *, unsigned char *Data); 
+int dsmcc_biop_process_module_info(struct biop_module_info *, unsigned char *Data);
 void dsmcc_biop_process_data(struct cache *cache, struct cache_module_data *cachep);
 
 int dsmcc_biop_process_srg(struct biop_message *, struct cache_module_data *cachep, struct cache *cache);
