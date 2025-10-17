@@ -17,7 +17,7 @@ This project uses a simple Makefile. Customise the CC, LD etc variables to match
 ## Version History
 
 | Version                  | Author           | URL                                       |
-|-----------------------------------------------------------------------------------------|
+|--------------------------|------------------|-------------------------------------------|
 | **Original version by:** | Richard Palmer   | https://sourceforge.net/projects/libdsmcc |
 | **0.7.0 fork by:**       | Andrey Pridvorov | https://github.com/ua0lnj/libdsmcc        |
 | **0.7.1 fork by:**       | Andrew Nile      | https://github.com/AndrewNile/libdsmcc    |
