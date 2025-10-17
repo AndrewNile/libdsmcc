@@ -14,7 +14,7 @@ By default files are saved in the Windows temporary directory `%TEMP%\cache`, or
 
 This project uses a simple Makefile. Customise the CC, LD etc variables to match your toolchain, then run the `make` command.
 
-##Version History
+## Version History
 
 | Version                  | Author           | URL                                       |
 |-----------------------------------------------------------------------------------------|
