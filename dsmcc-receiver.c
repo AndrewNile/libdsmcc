@@ -824,14 +824,14 @@ dsmcc_process_section_desc(unsigned char *Data, int Length) {
 	struct dsmcc_section section;
 	int ret;
 
-	ret = dsmcc_process_section_header(&section, Data+DSMCC_SECTION_OFFSET, Length);
+	ret = dsmcc_process_section_header(&section, Data + DSMCC_SECTION_OFFSET, Length);
 
 	/* TODO */
 
 }
 
 void
-dsmcc_process_section(struct dsmcc_status *status,unsigned char *Data,int Length,int pid) {
+dsmcc_process_section(struct dsmcc_status *status, unsigned char *Data, int Length, int pid) {
 	uint32_t crc32_decode;
 	unsigned short section_len;
 	int full_cache = 1;
@@ -849,6 +849,7 @@ dsmcc_process_section(struct dsmcc_status *status,unsigned char *Data,int Length
 
 	if(crc32_decode != 0) {
 		syslog(LOG_ERR, "Corrupt CRC for section, dropping");
+#ifdef DEBUG
 		if(status->debug_fd != NULL) {
 			FILE *crcfd;
 			fprintf(status->debug_fd, "[libdsmcc] Dropping corrupt section (Got %X)\n", crc32_decode);
@@ -857,6 +858,7 @@ dsmcc_process_section(struct dsmcc_status *status,unsigned char *Data,int Length
 			fwrite(Data, 1, Length, crcfd);
 			fclose(crcfd);
 		}
+#endif
 		return;
 	}
 
