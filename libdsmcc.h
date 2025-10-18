@@ -11,6 +11,8 @@ extern "C" {
 #include <syslog.h>
 #endif
 
+#define REC_BUF_SIZE 4284		/* 1024*4 + 188 */
+
 #include "dsmcc-receiver.h"
 #include "dsmcc-carousel.h"
 
@@ -22,7 +24,7 @@ struct stream {
 
 struct pid_buffer {
         int pid;
-        unsigned char data[4284]; /* 1024*4 + 188 */
+        unsigned char data[REC_BUF_SIZE];
         int pointer_field;
         int in_section;
         int cont;

@@ -82,11 +82,10 @@ void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int L
 			fprintf(status->debug_fd, "[libdsmcc] Packet out of sequence (cont %d, buf->cont %d), resetting\n", cont, buf->cont);
 		}
 		buf->in_section = 0;
-		memset(buf->data, 0xFF, 4284);
+		memset(buf->data, 0xFF, REC_BUF_SIZE);
 	}
 
 	if (*(Data + 1) & DSMCC_START_INDICATOR) {
-		//	syslog(LOG_ERR, "new dsmcc section");
 		if (status->debug_fd != NULL) {
 			fprintf(status->debug_fd, "[libdsmcc] New dsmcc section\n");
 		}
@@ -98,15 +97,16 @@ void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int L
 				}
 				dsmcc_process_section(status, buf->data, buf->in_section, pid);
 				/* zero buffer ? */
-				memset(buf->data, 0xFF, 4284);
-				/* read data upto this and append to buf */
+				memset(buf->data, 0xFF, REC_BUF_SIZE);
+				/* read data up to this and append to buf */
 				buf->in_section = 183 - buf->pointer_field;
 				buf->cont = -1;
 				memcpy(buf->data, Data + (5 + buf->pointer_field), buf->in_section);
 			}
 			else {
 				/* corrupted ? */
-				fprintf(stderr,"pointer field %d\n", buf->pointer_field);
+				syslog(LOG_ERR, "Corrupted pointer field %d?\n", buf->pointer_field);
+				fprintf(stderr, "pointer field %d\n", buf->pointer_field);
 			}
 		}
 		else {
@@ -117,8 +117,12 @@ void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int L
 	}
 	else {
 		if (buf->in_section > 0) {
-			if (buf->in_section > 4284)
-				syslog(LOG_ERR, "Packet overwrriten buffer");
+			if (buf->in_section + 184 > REC_BUF_SIZE) {
+				syslog(LOG_ERR, "Packet has overwritten the receive buffer\n");
+				/* packet is likely corrupted, so scrub and restart */
+				buf->in_section = 0;
+				memset(buf->data, 0xFF, REC_BUF_SIZE);
+			}
 			/* append data to buf */
 			memcpy(buf->data + buf->in_section, Data + 4, 184);
 			buf->in_section += 184;
