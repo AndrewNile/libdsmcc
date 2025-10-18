@@ -117,7 +117,7 @@ void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int L
 	else {
 		if (buf->in_section > 0) {
 			if (buf->in_section + 184 > REC_BUF_SIZE) {
-				syslog(LOG_ERR, "Packet has overwritten the receive buffer\n");
+				syslog(LOG_ERR, "Packet has overwritten the receive buffer");
 				/* packet is likely corrupted, so scrub and restart */
 				buf->in_section = 0;
 				memset(buf->data, 0xFF, REC_BUF_SIZE);
