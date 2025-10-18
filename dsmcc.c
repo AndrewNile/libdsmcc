@@ -106,7 +106,6 @@ void dsmcc_receive(struct dsmcc_status *status, const unsigned char *Data, int L
 			else {
 				/* corrupted ? */
 				syslog(LOG_ERR, "Corrupted pointer field %d?\n", buf->pointer_field);
-				fprintf(stderr, "pointer field %d\n", buf->pointer_field);
 			}
 		}
 		else {
